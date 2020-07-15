@@ -1,0 +1,46 @@
+version: '3.7'
+services:
+
+  cam1:
+    image: yuccastream/ffmpeg:4-2-2
+    container_name: cam1
+    environment:
+      - "TZ=Asia/Yekaterinburg"
+    restart: "always"
+    networks:
+      - cam_ntw
+    volumes:
+      - live_hls:/hls
+      - ./archive:/archive
+      - ./entrypoint.sh:/entrypoint.sh
+    devices:
+      - /dev/video0:/dev/video0
+    working_dir: /hls
+    entrypoint: "/entrypoint.sh"
+
+  cam_nginx:
+    image: nginx:alpine
+    container_name: cam_nginx
+    restart: "always"
+    networks:
+      - cam_ntw
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./archive:/archive
+      - ./nginx/conf:/etc/nginx/conf.d
+      - ./nginx/links:/links
+      - live_hls:/hls
+    environment:
+      - "TZ=Asia/Yekaterinburg"
+
+networks:
+  cam_ntw:
+
+volumes:
+  live_hls:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=100m
