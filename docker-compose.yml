@@ -2,7 +2,10 @@ version: '3.7'
 services:
 
   cam1:
-    image: yuccastream/ffmpeg:4-2-2
+    # image: jrottenberg/ffmpeg:4.3-vaapi
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: cam1
     environment:
       - "TZ=Asia/Yekaterinburg"
@@ -15,6 +18,7 @@ services:
       - ./entrypoint.sh:/entrypoint.sh
     devices:
       - /dev/video0:/dev/video0
+      - /dev/dri:/dev/dri
     working_dir: /hls
     entrypoint: "/entrypoint.sh"
 

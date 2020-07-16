@@ -23,3 +23,16 @@ docker-compose down -v
 
 - https://github.com/yuccastream/ffmpeg
 - https://github.com/jrottenberg/ffmpeg
+
+
+### Захват с USB
+
+Что бы узнать `-input_format` и `-video_size` на входе:
+```bash
+ffmpeg -hide_banner -f video4linux2 -list_formats all -i /dev/video0
+```
+
+Что бы узнать `-framerate` на входе:
+```bash
+v4l2-ctl --list-formats-ext
+```
